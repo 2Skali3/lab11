@@ -1,5 +1,8 @@
 package it.unibo.oop.lab.streams;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summingDouble;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -88,10 +92,16 @@ public final class MusicGroupImpl implements MusicGroup {
                 .map(Song::getSongName);
     }
 
+    //con entryset intendo quello che mi viene dato dal primo collect? e perché non mi funziona Entry::....
     @Override
     public Optional<String> longestAlbum() {
-        return null;
+        return this.songs.stream().filter(a -> a.getAlbumName().isPresent())
+                .collect(Collectors.groupingBy(Song::getAlbumName, Collectors.summingDouble(Song::getDuration)))
+                .entrySet().stream()
+                        .collect(Collectors.maxBy(Comparator.comparingDouble(e -> e.getValue())))
+                        .flatMap(e -> e.getKey());
     }
+    
 
     private static final class Song {
 
