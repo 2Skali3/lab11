@@ -57,12 +57,20 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public int countSongsInNoAlbum() {
-        return (int) this.songs.stream().filter(s -> s.getAlbumName().isEmpty()).count();
+        return (int) this.songs.stream().filter(a -> a.getAlbumName().isEmpty()).count();
     }
 
+    /*
+    non sapevo .mapTODOuble e .average (non so nemmeno dove possa vedere che posso usare .avarage e il perchè io possa usarlo)
+    nel mio caso avrei usato di nuovo countSong per trovare la media di durata
+    */
     @Override
     public OptionalDouble averageDurationOfSongs(final String albumName) {
-        return null;
+        return this.songs.stream()
+                .filter(s -> s.getAlbumName().isPresent())
+                .filter(s -> s.getAlbumName().get().equals(albumName))
+                .mapToDouble(Song::getDuration)
+                .average();
     }
 
     @Override
