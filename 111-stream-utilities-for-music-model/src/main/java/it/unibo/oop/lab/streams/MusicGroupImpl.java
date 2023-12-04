@@ -41,7 +41,8 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public Stream<String> albumInYear(final int year) {
-        return null;
+        return albums.keySet().stream()
+                .filter(a -> albums.get(a).equals(year));
     }
 
     // penso che ci voglia il cast solo perché di base count è un long
