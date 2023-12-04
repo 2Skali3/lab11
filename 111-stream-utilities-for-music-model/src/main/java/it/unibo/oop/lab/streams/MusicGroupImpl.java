@@ -39,6 +39,7 @@ public final class MusicGroupImpl implements MusicGroup {
         return this.albums.keySet().stream();
     }
 
+    //ho iterato sulle key, ho visto che nelle soluzioni è stato fatto sulle entry (non ho capito questa volta se fa differenza)
     @Override
     public Stream<String> albumInYear(final int year) {
         return albums.keySet().stream()
@@ -56,7 +57,7 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public int countSongsInNoAlbum() {
-        return -1;
+        return (int) this.songs.stream().filter(s -> s.getAlbumName().isEmpty()).count();
     }
 
     @Override
