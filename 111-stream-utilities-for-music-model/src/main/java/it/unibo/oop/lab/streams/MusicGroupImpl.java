@@ -1,8 +1,5 @@
 package it.unibo.oop.lab.streams;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.summingDouble;
-
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,8 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
-import java.util.Map.Entry;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -49,17 +44,18 @@ public final class MusicGroupImpl implements MusicGroup {
     //ho iterato sulle key, ho visto che nelle soluzioni è stato fatto sulle entry (non ho capito questa volta se fa differenza)
     @Override
     public Stream<String> albumInYear(final int year) {
-        return albums.keySet().stream()
-                .filter(a -> albums.get(a).equals(year));
+        return albums.entrySet().stream()
+            .filter(e -> e.getValue().equals(year))
+            .map(e -> e.getKey());
     }
 
     // penso che ci voglia il cast solo perché di base count è un long
     @Override
     public int countSongs(final String albumName) {
         return (int) this.songs.stream()
-                .filter(s -> s.getAlbumName().isPresent())
-                .filter(s -> s.getAlbumName().get().equals(albumName))
-                .count();
+            .filter(s -> s.getAlbumName().isPresent())
+            .filter(s -> s.getAlbumName().get().equals(albumName))
+            .count();
     }
 
     @Override
@@ -74,10 +70,10 @@ public final class MusicGroupImpl implements MusicGroup {
     @Override
     public OptionalDouble averageDurationOfSongs(final String albumName) {
         return this.songs.stream()
-                .filter(s -> s.getAlbumName().isPresent())
-                .filter(s -> s.getAlbumName().get().equals(albumName))
-                .mapToDouble(Song::getDuration)
-                .average();
+            .filter(s -> s.getAlbumName().isPresent())
+            .filter(s -> s.getAlbumName().get().equals(albumName))
+            .mapToDouble(Song::getDuration)
+            .average();
     }
 
 
@@ -88,18 +84,20 @@ public final class MusicGroupImpl implements MusicGroup {
     @Override
     public Optional<String> longestSong() {
         return this.songs.stream()
-                .collect(Collectors.maxBy(Comparator.comparingDouble(Song::getDuration)))
-                .map(Song::getSongName);
+            .collect(Collectors.maxBy(Comparator.comparingDouble(Song::getDuration)))
+            .map(Song::getSongName);
     }
 
-    //con entryset intendo quello che mi viene dato dal primo collect? e perché non mi funziona Entry::....
+    //con entryset intendo quello che mi viene dato dal primo collect?
     @Override
     public Optional<String> longestAlbum() {
-        return this.songs.stream().filter(a -> a.getAlbumName().isPresent())
-                .collect(Collectors.groupingBy(Song::getAlbumName, Collectors.summingDouble(Song::getDuration)))
-                .entrySet().stream()
-                        .collect(Collectors.maxBy(Comparator.comparingDouble(e -> e.getValue())))
-                        .flatMap(e -> e.getKey());
+        return this.songs.stream()
+            .filter(a -> a.getAlbumName().isPresent())
+            .collect(Collectors.groupingBy(Song::getAlbumName, Collectors.summingDouble(Song::getDuration)))
+            .entrySet()
+            .stream()
+            .collect(Collectors.maxBy(Comparator.comparingDouble(Map.Entry::getValue)))
+            .flatMap(Map.Entry::getKey);
     }
     
 
