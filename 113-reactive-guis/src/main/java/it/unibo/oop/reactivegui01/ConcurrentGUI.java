@@ -58,7 +58,8 @@ public final class ConcurrentGUI extends JFrame {
         /*
          * Stop is volatile to ensure visibility. Look at:
          * 
-         * http://archive.is/9PU5N - Sections 17.3 and 17.4
+         * http://archive.is/9P
+         * U5N - Sections 17.3 and 17.4
          * 
          * For more details on how to use volatile:
          * 
