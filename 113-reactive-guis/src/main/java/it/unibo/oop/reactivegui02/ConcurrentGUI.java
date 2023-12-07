@@ -13,6 +13,7 @@ import javax.swing.SwingUtilities;
 /**
  * Second example of reactive GUI.
  */
+//cerca pca machine learning (out of context)
 @SuppressWarnings("PMD.AvoidPrintStackTrace")
 public final class ConcurrentGUI extends JFrame {
 
@@ -51,8 +52,7 @@ public final class ConcurrentGUI extends JFrame {
             stop.setEnabled(false);
         });
         new Thread(agent).start();
-        }
-
+    }
     private class Agent implements Runnable{
 
         private volatile Boolean stop = false;
